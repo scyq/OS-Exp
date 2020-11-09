@@ -16,11 +16,11 @@ int main()
     {
         for (int i = 0; i < 10; i++)
             printf("b");
-        // _exit(0);
-        return 0;
+        exit(0);
     }
     else
     {
+        wait(NULL);
     }
 
     c_pid = fork();
@@ -32,11 +32,11 @@ int main()
     {
         for (int i = 0; i < 10; i++)
             printf("c");
-        // _exit(0);
-        return 0;
+        exit(0);
     }
     else
     {
+        wait(NULL);
     }
 
     for (int i = 0; i < 10; i++)
