@@ -18,7 +18,8 @@ int main()
     re_code0 = pthread_create(&tid_0, NULL, char_thread, &c);
     re_code1 = pthread_create(&tid_1, NULL, int_thread, &i);
 
-    if (re_code0 || re_code1)
+    /* if err */
+    if (re_code0 && re_code1)
     {
         printf("Thread Create Err");
         exit(1);

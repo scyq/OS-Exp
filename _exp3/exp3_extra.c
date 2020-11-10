@@ -100,9 +100,8 @@ void *sort_thread(void *arg)
 void *re_sort_thread(void *arg)
 {
     int *arr = arg;
-    sort_reverse(arr, 10);
     printf("Big to Small: ");
-    for (int i = 0; i < 10; i++)
+    for (int i = 9; i >= 0; i--)
     {
         printf("%d ", arr[i]);
     }
