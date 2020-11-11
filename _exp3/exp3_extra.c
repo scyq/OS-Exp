@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /* quick sort */
 void swap(int *a, int *b)
@@ -9,7 +10,7 @@ void swap(int *a, int *b)
     *a = t;
 }
 
-void div(int arr[], int start, int end)
+void depart(int arr[], int start, int end)
 {
     if (start >= end)
         return;
@@ -29,18 +30,18 @@ void div(int arr[], int start, int end)
     else
         left++;
     if (left)
-        div(arr, start, left - 1);
-    div(arr, left + 1, end);
+        depart(arr, start, left - 1);
+    depart(arr, left + 1, end);
 }
 
 void sort(int arr[], int len)
 {
-    div(arr, 0, len - 1);
+    depart(arr, 0, len - 1);
 }
 
 void sort_reverse(int arr[], int len)
 {
-    div(arr, 0, len - 1);
+    depart(arr, 0, len - 1);
     int temp[len];
     for (int i = 0; i < len; i++)
         temp[len - i - 1] = arr[i];

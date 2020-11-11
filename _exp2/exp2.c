@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 int main()
 {
@@ -18,10 +19,6 @@ int main()
             printf("b");
         exit(0);
     }
-    else
-    {
-        wait(NULL);
-    }
 
     c_pid = fork();
     if (c_pid < 0)
@@ -34,13 +31,10 @@ int main()
             printf("c");
         exit(0);
     }
-    else
-    {
-        wait(NULL);
-    }
 
     for (int i = 0; i < 10; i++)
         printf("a");
 
+    
     return 0;
 }

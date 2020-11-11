@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #define MAX 100
 
 int main()
@@ -23,7 +24,7 @@ int main()
         close(fd[1]);
         int len = read(fd[0], buffer, sizeof(buffer));
         buffer[len] = 0;
-        printf("Child: Messege from pipe is ' %s '", buffer);
+        printf("Child: Messege from pipe is ' %s '\n", buffer);
         exit(0);
     }
     /* Parent Process */

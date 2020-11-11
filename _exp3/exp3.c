@@ -1,5 +1,6 @@
 #include <pthread.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 void *char_thread(void *arg);
 void *int_thread(void *arg);
