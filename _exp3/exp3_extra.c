@@ -66,7 +66,7 @@ int main()
     if (re_code0)
     {
         printf("Thread Create Err");
-        exit(0);
+        exit(1);
     }
     else
     {
@@ -76,7 +76,7 @@ int main()
     if (re_code1)
     {
         printf("Thread Create Err");
-        exit(0);
+        exit(1);
     }
     else
     {

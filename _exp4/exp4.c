@@ -31,7 +31,7 @@ int main()
     if (r_r1 && r_r2)
     {
         printf("Thread Create Err");
-        exit(0);
+        exit(1);
     }
     else
     {
@@ -45,31 +45,47 @@ int main()
 void *read1(void *arg)
 {
     FILE *fp = fopen("./1.dat", "r");
-    while (feof(fp))
+    if (fp)
     {
-        fscanf(fp, "%d", &num0);
-        sem_post(&read_ready[0]);
-        sem_wait(&read_ready[1]); /* wait the other reader finished */
-        sem_post(&read_finished);
-        sem_wait(&job_done);
+        while (feof(fp))
+        {
+            fscanf(fp, "%d", &num0);
+            sem_post(&read_ready[0]);
+            sem_wait(&read_ready[1]); /* wait the other reader finished */
+            sem_post(&read_finished);
+            sem_wait(&job_done);
+        }
+        fclose(fp);
+        pthread_exit(0);
     }
-    fclose(fp);
-    pthread_exit(0);
+    else
+    {
+        printf("Open File Err\n");
+        exit(1);
+    }
 }
 
 void *read2(void *arg)
 {
     FILE *fp = fopen("./2.dat", "r");
-    while (feof(fp))
+    if (fp)
     {
-        fscanf(fp, "%d", &num1);
-        sem_post(&read_ready[1]);
-        sem_wait(&read_ready[0]); /* wait the other reader finished */
-        sem_post(&read_finished);
-        sem_wait(&job_done);
+        while (feof(fp))
+        {
+            fscanf(fp, "%d", &num1);
+            sem_post(&read_ready[1]);
+            sem_wait(&read_ready[0]); /* wait the other reader finished */
+            sem_post(&read_finished);
+            sem_wait(&job_done);
+        }
+        fclose(fp);
+        pthread_exit(0);
     }
-    fclose(fp);
-    pthread_exit(0);
+    else
+    {
+        printf("Open File Err\n");
+        exit(1);
+    }
 }
 
 void *plus_thread(void *arg)
