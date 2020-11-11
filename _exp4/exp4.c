@@ -23,10 +23,12 @@ int main()
     sem_init(&read_finished, SHARE, -1);
     sem_init(&job_done, SHARE, 0);
 
-    pthread_t r1, r2;
-    int r_r1, r_r2;
+    pthread_t r1, r2, o1, o2;
+    int r_r1, r_r2, r_o1, r_o2;
     r_r1 = pthread_create(&r1, NULL, read1, NULL);
     r_r2 = pthread_create(&r2, NULL, read2, NULL);
+    r_o1 = pthread_create(&o1, NULL, plus_thread, NULL);
+    r_o2 = pthread_create(&o2, NULL, mul_thread, NULL);
 
     if (r_r1 && r_r2)
     {
@@ -35,8 +37,8 @@ int main()
     }
     else
     {
-        pthread_join(&r1, NULL);
-        pthread_join(&r2, NULL);
+        pthread_join(r1, NULL);
+        pthread_join(r2, NULL);
     }
 
     return 0;
@@ -47,7 +49,7 @@ void *read1(void *arg)
     FILE *fp = fopen("./1.dat", "r");
     if (fp)
     {
-        while (feof(fp))
+        while (!feof(fp))
         {
             fscanf(fp, "%d", &num0);
             sem_post(&read_ready[0]);
@@ -70,7 +72,7 @@ void *read2(void *arg)
     FILE *fp = fopen("./2.dat", "r");
     if (fp)
     {
-        while (feof(fp))
+        while (!feof(fp))
         {
             fscanf(fp, "%d", &num1);
             sem_post(&read_ready[1]);
@@ -90,22 +92,28 @@ void *read2(void *arg)
 
 void *plus_thread(void *arg)
 {
-    sem_wait(&read_finished); /* judge if ok to do the job */
-    printf("%d + %d = %d\n", num0, num1, num0 + num1);
-    sem_wait(&read_finished); /* this thread get into wait queue */
+    while (1)
+    {
+        sem_wait(&read_finished); /* judge if ok to do the job */
+        printf("%d + %d = %d\n", num0, num1, num0 + num1);
+        sem_wait(&read_finished); /* this thread get into wait queue */
 
-    /* post 2 times make both reader1 and reader2 can read */
-    sem_post(&job_done);
-    sem_post(&job_done);
+        /* post 2 times make both reader1 and reader2 can read */
+        sem_post(&job_done);
+        sem_post(&job_done);
+    }
 }
 
 void *mul_thread(void *arg)
 {
-    sem_wait(&read_finished); /* judge if ok to do the job */
-    printf("%d * %d = %d\n", num0, num1, num0 * num1);
-    sem_wait(&read_finished); /* this thread get into wait queue */
+    while (1)
+    {
+        sem_wait(&read_finished); /* judge if ok to do the job */
+        printf("%d * %d = %d\n", num0, num1, num0 * num1);
+        sem_wait(&read_finished); /* this thread get into wait queue */
 
-    /* post 2 times make both reader1 and reader2 can read */
-    sem_post(&job_done);
-    sem_post(&job_done);
+        /* post 2 times make both reader1 and reader2 can read */
+        sem_post(&job_done);
+        sem_post(&job_done);
+    }
 }
