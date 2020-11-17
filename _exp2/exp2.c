@@ -17,6 +17,7 @@ int main()
     {
         for (int i = 0; i < 10; i++)
             printf("b");
+        printf("\n");
         exit(0);
     }
 
@@ -29,12 +30,13 @@ int main()
     {
         for (int i = 0; i < 10; i++)
             printf("c");
+        printf("\n");
         exit(0);
     }
 
     for (int i = 0; i < 10; i++)
         printf("a");
-
+    printf("\n");
     
     return 0;
 }

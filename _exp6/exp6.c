@@ -9,7 +9,7 @@ static void signal_catcher(int signal_no)
     if (signal_no == 2)
     {
         printf("Signal ID is %d. Speaker is %d.\n", signal_no, getpid());
-        printf("You are trying to interrupt the progress.No way!\n");
+        printf("You are trying to interrupt the progress. No way!\n");
     }
     else if (signal_no == SIGUSR1)
     {
