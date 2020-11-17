@@ -16,13 +16,13 @@ int main()
     int *mem_addr;
 
     /* 
-        10 numbers but take 11 int size
-        head save the turn 
+        we only need two buffers in the condition
+        head save the turn flag
         turn is represent for who is supposing to do
         0 - writer
         1 - reader
     */
-    shmid = shmget(0, 11 * sizeof(int), IPC_CREAT | 0666);
+    shmid = shmget(0, 2 * sizeof(int), IPC_CREAT | 0666);
     if (shmid == -1)
     {
         printf("share memory get error\n");
@@ -48,7 +48,6 @@ int main()
             while (*addr != 0)
                 ; /* busy waiting */
             scanf("%d", p);
-            p += sizeof(int);
             *addr = 1;
         }
         shmdt(addr); /* depart from shm */
@@ -71,7 +70,6 @@ int main()
                 while (*addr != 1)
                     ; /* busy waiting */
                 printf("Square of number %d is %d.\n", i, *p * *p);
-                p += sizeof(int);
                 *addr = 0;
             }
             shmdt(addr); /* depart from shm */

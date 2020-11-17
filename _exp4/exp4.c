@@ -14,6 +14,7 @@ int buffer_index = 0;
 sem_t buffer_size;
 sem_t read_lock;
 sem_t number_counts;
+sem_t post_lock; /* make sure post is atomic */
 
 int main()
 {
@@ -21,6 +22,7 @@ int main()
     sem_init(&read_lock, SHARE, 1);
     sem_init(&number_counts, SHARE, 0);
     sem_init(&buffer_size, SHARE, 2);
+    sem_init(&post_lock, SHARE, 1);
 
     pthread_t r1, r2, o1, o2;
     int r_r1, r_r2, r_o1, r_o2;
@@ -57,6 +59,7 @@ void *read1(void *arg)
             if (buffer_index == 0)
             {
                 sem_post(&number_counts);
+                sem_post(&post_lock);
             }
             sem_post(&read_lock);
         }
@@ -84,6 +87,7 @@ void *read2(void *arg)
             if (buffer_index == 0)
             {
                 sem_post(&number_counts);
+                sem_post(&post_lock);
             }
             sem_post(&read_lock);
         }
@@ -101,6 +105,7 @@ void *plus_thread(void *arg)
 {
     while (1)
     {
+        sem_wait(&post_lock);
         sem_wait(&number_counts);
         printf("%d + %d = %d\n", buffer[0], buffer[1], buffer[0] + buffer[1]);
         sem_post(&buffer_size);
@@ -112,6 +117,7 @@ void *mul_thread(void *arg)
 {
     while (1)
     {
+        sem_wait(&post_lock);
         sem_wait(&number_counts);
         printf("%d * %d = %d\n", buffer[0], buffer[1], buffer[0] * buffer[1]);
         sem_post(&buffer_size);
