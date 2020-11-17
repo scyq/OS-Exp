@@ -19,7 +19,7 @@ int main()
 {
 
     sem_init(&read_lock, SHARE, 1);
-    sem_init(&number_counts, SHARE, -1);
+    sem_init(&number_counts, SHARE, 0);
     sem_init(&buffer_size, SHARE, 2);
 
     pthread_t r1, r2, o1, o2;
@@ -54,8 +54,11 @@ void *read1(void *arg)
             sem_wait(&read_lock);
             fscanf(fp, "%d", &buffer[buffer_index]);
             buffer_index = (buffer_index + 1) % 2;
+            if (buffer_index == 0)
+            {
+                sem_post(&number_counts);
+            }
             sem_post(&read_lock);
-            sem_post(&number_counts);
         }
         fclose(fp);
         pthread_exit(0);
@@ -78,8 +81,11 @@ void *read2(void *arg)
             sem_wait(&read_lock);
             fscanf(fp, "%d", &buffer[buffer_index]);
             buffer_index = (buffer_index + 1) % 2;
+            if (buffer_index == 0)
+            {
+                sem_post(&number_counts);
+            }
             sem_post(&read_lock);
-            sem_post(&number_counts);
         }
         fclose(fp);
         pthread_exit(0);
@@ -99,7 +105,6 @@ void *plus_thread(void *arg)
         printf("%d + %d = %d\n", buffer[0], buffer[1], buffer[0] + buffer[1]);
         sem_post(&buffer_size);
         sem_post(&buffer_size);
-        sem_wait(&number_counts); /* put the thread into wait queue */
     }
 }
 
@@ -111,6 +116,5 @@ void *mul_thread(void *arg)
         printf("%d * %d = %d\n", buffer[0], buffer[1], buffer[0] * buffer[1]);
         sem_post(&buffer_size);
         sem_post(&buffer_size);
-        sem_wait(&number_counts); /* put the thread into wait queue */
     }
 }
