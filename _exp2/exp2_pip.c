@@ -21,17 +21,19 @@ int main()
     /* Child Process */
     if (child_pid0 == 0)
     {
-        close(fd[1]);
-        int len = read(fd[0], buffer, sizeof(buffer));
-        buffer[len] = 0;
-        printf("%s\n", buffer);
+        close(fd[0]);
+        char temp[MAX] = "Child0 is sending Message!";
+        write(fd[1], temp, strlen(temp));
+        exit(0);
     }
     /* Parent Process */
     else if (child_pid0 > 0)
     {
-        close(fd[0]);
-        char temp[MAX] = "Child0 is sending Message!";
-        write(fd[1], temp, strlen(temp));
+        wait(NULL);
+        /* can not close pipe here */
+        int len = read(fd[0], buffer, sizeof(buffer));
+        buffer[len] = 0;
+        printf("%s\n", buffer);
     }
     else
     {
@@ -40,25 +42,29 @@ int main()
     }
 
     child_pid1 = fork();
+    /* Child Process */
     if (child_pid1 == 0)
-    {
-        close(fd[1]);
-        int len = read(fd[0], buffer, sizeof(buffer));
-        buffer[len] = 0;
-        printf("%s\n", buffer);
-    }
-    /* Parent Process */
-    else if (child_pid1 > 0)
     {
         close(fd[0]);
         char temp[MAX] = "Child1 is sending Message!";
         write(fd[1], temp, strlen(temp));
+        exit(0);
+    }
+    /* Parent Process */
+    else if (child_pid1 > 0)
+    {
+        wait(NULL);
+        close(fd[1]);
+        int len = read(fd[0], buffer, sizeof(buffer));
+        buffer[len] = 0;
+        printf("%s\n", buffer);
     }
     else
     {
         printf("Fork Err");
         exit(1);
     }
+
 
     return 0;
 }
