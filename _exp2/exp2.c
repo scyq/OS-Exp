@@ -15,7 +15,8 @@ int main()
     }
     else if (b_pid == 0)
     {
-        for (int i = 0; i < 10; i++)
+        printf("This is from process %d\n", getpid());
+        for (int i = 0; i < 1000; i++)
             printf("b");
         printf("\n");
         exit(0);
@@ -28,13 +29,15 @@ int main()
     }
     else if (c_pid == 0)
     {
-        for (int i = 0; i < 10; i++)
+        printf("This is from process %d\n", getpid());
+        for (int i = 0; i < 1000; i++)
             printf("c");
         printf("\n");
         exit(0);
     }
 
-    for (int i = 0; i < 10; i++)
+    printf("This is from process %d\n", getpid());
+    for (int i = 0; i < 1000; i++)
         printf("a");
     printf("\n");
     
